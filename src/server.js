@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const app = require("./app");
+const logger = require("./utils/logger");
 
 dotenv.config();
 
@@ -8,19 +9,31 @@ const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
-  console.error("MONGODB_URI is not set in .env");
+  logger.error("MONGODB_URI is not set in .env");
   process.exit(1);
 }
+
+mongoose.connection.on("error", (err) => {
+  logger.error("MongoDB connection error (event)", { message: err.message });
+});
+
+mongoose.connection.on("disconnected", () => {
+  logger.warn("MongoDB disconnected");
+});
+
+mongoose.connection.on("reconnected", () => {
+  logger.info("MongoDB reconnected");
+});
 
 mongoose
   .connect(MONGODB_URI)
   .then(() => {
-    console.log("MongoDB connected");
+    logger.info("MongoDB connected");
     app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+      logger.info("Server started", { port: PORT });
     });
   })
   .catch((error) => {
-    console.error("MongoDB connection error:", error.message);
+    logger.error("MongoDB connection error", { message: error.message });
     process.exit(1);
   });

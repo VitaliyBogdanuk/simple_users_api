@@ -61,6 +61,31 @@ GET /
 }
 ```
 
+## Перевірка підключення до БД
+
+```http
+GET /api/health/db
+```
+
+Відповідь (успіх, 200):
+
+```json
+{
+  "ok": true,
+  "message": "Database connection OK"
+}
+```
+
+Відповідь (помилка, 503):
+
+```json
+{
+  "ok": false,
+  "message": "Database error",
+  "error": "опис помилки"
+}
+```
+
 ## API: Користувачі
 
 Базовий шлях: `/api/users`
