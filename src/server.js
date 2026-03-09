@@ -25,8 +25,13 @@ mongoose.connection.on("reconnected", () => {
   logger.info("MongoDB reconnected");
 });
 
+const mongooseOptions = {
+  serverSelectionTimeoutMS: 10000,
+  maxPoolSize: 10,
+};
+
 mongoose
-  .connect(MONGODB_URI)
+  .connect(MONGODB_URI, mongooseOptions)
   .then(() => {
     logger.info("MongoDB connected");
     app.listen(PORT, () => {
@@ -34,6 +39,9 @@ mongoose
     });
   })
   .catch((error) => {
-    logger.error("MongoDB connection error", { message: error.message });
+    logger.error("MongoDB connection error", {
+      message: error.message,
+      name: error.name,
+    });
     process.exit(1);
   });

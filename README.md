@@ -244,8 +244,17 @@ npm run dev
 Рекомендований порядок запуску в Postman:
 `Health Check -> Create User -> Get All Users -> Get User By Id -> Update User -> Delete User`.
 
+## Деплой на Vercel + MongoDB Atlas
+
+Для коректної роботи з Vercel потрібно:
+
+1. **MongoDB Atlas → Network Access**: додай `0.0.0.0/0` (Allow Access from Anywhere), бо Vercel використовує динамічні IP.
+2. **Змінні середовища**: у Vercel Dashboard → Settings → Environment Variables додай `MONGODB_URI`.
+3. У connection string додай ім’я бази перед `?`:  
+   `mongodb+srv://...mongodb.net/simple-api?retryWrites=true&w=majority`
+
 ## Можливі помилки
 
 - `MONGODB_URI is not set in .env` — не вказаний `MONGODB_URI`.
-- `MongoDB connection error` — MongoDB не запущена або URI некоректний.
+- `MongoDB connection error` — MongoDB не запущена, URI некоректний або Atlas блокує підключення (перевір Network Access).
 - `Route ... not found` — неправильний endpoint.
